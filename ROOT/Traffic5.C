@@ -242,12 +242,12 @@ int Traffic5()
     	    {
     	        ch1 = Distance(carLane1,i-1,x+v,TotCarsUp,0,TotSites,true,id);
     	        ch3 = carLane1[id].CarData[i-1].Velocity;
-    	        ch4 = carLane1[id].CarData[i-1].Position;
+		ch4 = carLane1[id].CarData[i-1].Position;
     	        if ( ch4 + ch3 == x+v || ch4 + ch3 +1 == x+v)
     	            ch3 = 1;
     	        
     	        ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-    	        if (ch3==1 || ch2<=2*Vmax || ch1==0 || Prob(pPass)==false)     
+		if (ch3==1 || ch2 <= Vmax || ch1==0 || Prob(pPass)==false)     
 	        	    v = d - 1;
 	        	else 
 	        	    {cout << "\nOvertaking at  " << i << endl;
@@ -269,10 +269,10 @@ int Traffic5()
         
         for (int j = 0; j < TotCarsDown; j++ )
         {
-		    x = carLane2[j].CarData[i-1].Position;
+		x = carLane2[j].CarData[i-1].Position;
 	        v = carLane2[j].CarData[i-1].Velocity;
 			
-			d = Distance(carLane2,i-1,x,TotCarsDown,1,TotSites,false,id);
+		d = Distance(carLane2,i-1,x,TotCarsDown,1,TotSites,false,id);
 //STEP 1	
     	    if (v < Vmax && d > v + 1 )
    		    	v = v + 1; 
@@ -282,12 +282,12 @@ int Traffic5()
     	    {
     	        ch1 = Distance(carLane2,i-1,x+v,TotCarsDown,0,TotSites,true,id);
     	        ch3 = carLane2[id].CarData[i-1].Velocity;
-    	        ch4 = carLane2[id].CarData[i-1].Position;
+		ch4 = carLane2[id].CarData[i-1].Position;
     	        if ( ch4 + ch3 == x+v || ch4 + ch3 +1 == x+v)
     	            ch3 = 1;
     	        
     	        ch2 = Distance(carLane1,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-    	        if (ch3==1 || ch2<=2*Vmax || ch1==0 || Prob(pPass)==false)     
+    	        if (ch3==1 || ch2 <= Vmax || ch1==0 || Prob(pPass)==false)     
 	        	    v = d - 1;
 	        	else 
 	        	    {cout << "\nOvertaking at  " << i << endl;
@@ -384,7 +384,7 @@ int flag =0;
 	
 	for (int i=0; i<TotCarsDown; i++)
 	{
-	 	step2[i] = new TGraph();   
+	    step2[i] = new TGraph();   
 	    for (int j=0; j<=Tmax; j++)
         {   
             step2[i]->SetPoint(j,TotSites-carLane2[i].CarData[j].Position+1,Tmax-carLane2[i].CarData[j].Time);
