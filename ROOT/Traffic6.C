@@ -185,7 +185,7 @@ int Distance(Vehical NewCar[], int t, int x, int Tot, int pos, int Dmax, bool re
 }
 
 
-int Traffic8()
+int Traffic6()
 {
 	
 	srand(time(NULL));
