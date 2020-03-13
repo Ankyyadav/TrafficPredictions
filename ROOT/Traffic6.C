@@ -259,7 +259,7 @@ int Traffic6()
     	            ch1 = Distance(carLane1,i-1,x+v,TotCarsUp,0,TotSites,true,id);
     	            ch3 = carLane1[id].CarData[i-1].Velocity;
     	            ch4 = carLane1[id].CarData[i-1].Position;
-    	            if ( ch4 + ch3 == x+v || ch4 + ch3 +1 == x+v)
+    	            if ( x + v <= ch4 + ch3 +1)
     	            ch3 = 1;
     	        
     	            ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
@@ -305,7 +305,7 @@ int Traffic6()
     	            ch1 = Distance(carLane2,i-1,x+v,TotCarsDown,0,TotSites,true,id);
     	            ch3 = carLane2[id].CarData[i-1].Velocity;
     	            ch4 = carLane2[id].CarData[i-1].Position;
-    	            if ( ch4 + ch3 == x+v || ch4 + ch3 +1 == x+v)
+    	            if ( x + v <= ch4 + ch3 +1)
     	                ch3 = 1;
     	        
     	            ch2 = Distance(carLane1,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
