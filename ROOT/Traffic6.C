@@ -185,22 +185,22 @@ int Distance(Vehical NewCar[], int t, int x, int Tot, int pos, int Dmax, bool re
 }
 
 
-int Traffic6()
+int Traffic8()
 {
 	
 	srand(time(NULL));
 	cout<<"This should work!!!\n\n";
-	int TotCarsUp = 4;
-	int TotCarsDown = 4;
-	int TotSites = 30;
-	int Tmax = 20;
-	int Vmax = 4;
+	int TotCarsUp = 9;
+	int TotCarsDown = 9;
+	int TotSites = 80;
+	int Tmax = 40;
+	int Vmax = 5;
 	float pBrake = 0.3;
 	float pPass = 1;
-	int TimePerTSignal = 5;
-	int TSignalLength = 2;
+	int TimePerTSignal = 10;
+	int TSignalLength = 5;
 	bool TSignal = false;
-	int TSignalPos = 20;
+	int TSignalPos = 40;
 	
 	int x2=0,x=0,v=0,d=0,ch1=0,ch2=0,ch3=0,ch4=0,id=0,temp1=0,temp2=0,id1=0,id2=0;
 	Vehical carLane1[TotCarsUp];
@@ -211,21 +211,21 @@ int Traffic6()
 	carLane1[1].SetCarData(0,0,16,0);	
 	carLane1[2].SetCarData(0,0,19,0);
 	carLane1[3].SetCarData(0,0,22,2);
-//	carLane1[4].SetCarData(0,0,49,0);	
-//	carLane1[5].SetCarData(0,0,50,0);
-//	carLane1[6].SetCarData(0,0,52,1);
-//	carLane1[7].SetCarData(0,0,60,4);
-//	carLane1[8].SetCarData(0,0,70,5);
+	carLane1[4].SetCarData(0,0,49,0);	
+	carLane1[5].SetCarData(0,0,50,0);
+	carLane1[6].SetCarData(0,0,52,1);
+	carLane1[7].SetCarData(0,0,60,4);
+	carLane1[8].SetCarData(0,0,70,5);
 	
 	carLane2[0].SetCarData(0,0,3,2);
 	carLane2[1].SetCarData(0,0,20,1);	
 	carLane2[2].SetCarData(0,0,26,4);
 	carLane2[3].SetCarData(0,0,28,0);
-//	carLane2[4].SetCarData(0,0,49,4);	
-//	carLane2[5].SetCarData(0,0,53,3);
-//	carLane2[6].SetCarData(0,0,58,0);
-//	carLane2[7].SetCarData(0,0,59,0);
-//	carLane2[8].SetCarData(0,0,62,1);
+	carLane2[4].SetCarData(0,0,49,4);	
+	carLane2[5].SetCarData(0,0,53,3);
+	carLane2[6].SetCarData(0,0,58,0);
+	carLane2[7].SetCarData(0,0,59,0);
+	carLane2[8].SetCarData(0,0,62,1);
 	
 	cout << "\n   '||' -> STOP\t\t'==' -> GO\n\n" << endl;	
 
@@ -361,7 +361,7 @@ int flag =0;
 			
 		}// for every site
 		cout << "| --->\n     ";
-		for (int m = 0; m<TotSites+2; m++)
+		for (int m = 0; m<TotSites+6; m++)
 		    cout << "_";
 		cout << "\n\n";
 		
@@ -391,7 +391,7 @@ int flag =0;
 		cout << "| <--- At Time t = " << i << "\n\n\n\n";
 		TSignal = false;
 	}//For all time values
-/*	
+	
 //Plotting
 	TCanvas *c1 = new TCanvas("c1","Graph Draw Options",200,10,800,800);
 //    c1->SetGrid();
@@ -412,7 +412,7 @@ int flag =0;
         mg1->Add(step1[i]);
         step1[i]->SetMarkerStyle(20+i);
         step1[i]->SetMarkerColor(1);  
-        step1[i]->SetMarkerSize(2);      
+        step1[i]->SetMarkerSize(1);      
 	}
 	
 	
@@ -424,12 +424,11 @@ int flag =0;
             step2[i]->SetPoint(j,TotSites-carLane2[i].CarData[j].Position+1,Tmax-carLane2[i].CarData[j].Time);
             step2[i]->SetMarkerStyle(i*2+1);            
             c1->Update();
-
         }        
         mg2->Add(step2[i]);    
         step2[i]->SetMarkerStyle(20+TotCarsUp+i);
         step2[i]->SetMarkerColor(4);
-        step2[i]->SetMarkerSize(2);                      
+        step2[i]->SetMarkerSize(1);                      
 	}
 	
 	c1->cd(1);
@@ -441,8 +440,6 @@ int flag =0;
 	mg2->Draw("A pm p");
 	ShiftXAxis(mg2,TotSites);
 	ReverseYAxis(mg2);	
-*/	
+	
  return 0;	
 }
-
-
