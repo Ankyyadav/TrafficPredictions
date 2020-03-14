@@ -247,7 +247,7 @@ int Traffic5()
     	            ch3 = 1;
     	        
     	        ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-		if (ch3==1 || ch2 <= Vmax || ch1==0 || Prob(pPass)==false)     
+		if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
 	        	v = d - 1;
 	        else 
 	        	{cout << "\nOvertaking at  " << i << endl;
@@ -287,7 +287,7 @@ int Traffic5()
     	            ch3 = 1;
     	        
     	        ch2 = Distance(carLane1,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-    	        if (ch3==1 || ch2 <= Vmax || ch1==0 || Prob(pPass)==false)     
+    	        if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
 	        	    v = d - 1;
 	        	else 
 	        	    {cout << "\nOvertaking at  " << i << endl;
