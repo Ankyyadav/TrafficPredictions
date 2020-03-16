@@ -260,7 +260,9 @@ int Traffic6()
     	            ch3 = carLane1[id].CarData[i-1].Velocity;
     	            ch4 = carLane1[id].CarData[i-1].Position;
     	            if ( x + v <= ch4 + ch3 +1)
-    	            ch3 = 1;
+    	            	ch3 = 1;
+		    else
+    	            	ch3 = 0;
     	        
     	            ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
     	            if (ch3==1 || ch2<=2*Vmax || ch1==0 || Prob(pPass)==false || TSignal == true)     
