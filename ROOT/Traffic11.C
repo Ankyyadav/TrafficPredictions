@@ -22,6 +22,7 @@
 // *                --  Two lanes created for two sided traffic           *
 // *                --  Different number of cars                          *
 // *                --  Overtaking of cars using other lane allowed       *
+// *                --  Edited to allow density calculations              *
 // ************************************************************************
 //
 
@@ -184,46 +185,59 @@ int Distance(Vehical NewCar[], int t, int x, int Tot, int pos, int Dmax, bool re
     return dInit[pos][0];
 }
 
-
-int Traffic5()
+const int TotSites = 30;
+int Traffic11()
 {
 	
 	srand(time(NULL));
-	cout<<"This should work!!!\n\n\n";
-	int TotCarsUp = 9;
-	int TotCarsDown = 9;
-	int TotSites = 70;
-	int Tmax = 40;
+	cout<<"This should work!!!\n\n";
+	int TotCarsUp = 6;
+	int TotCarsDown = 3;
+	int Tmax = 100;
 	int Vmax = 5;
-	float pBrake = 0.5;
-	float pPass = 1;
+	float pBrake = 0.6;
+	float pPass = 0;
+	float CarDensity[TotSites] = {0} ;
+	float temp[Tmax];
+	int N = 1000;
 	
-	int x2=0,x=0,v=0,d=0,ch1=0,ch2=0,ch3=0,ch4=0,id=0;
+	int x2=0,x=0,v=0,d=0,ch1=0,ch2=0,ch3=0,ch4=0,id=0,temp1=0,temp2=0,id1=0,id2=0;
 	Vehical carLane1[TotCarsUp];
 	Vehical carLane2[TotCarsDown];
 //Initialisation Part
 	
-	carLane1[0].SetCarData(0,0,14,4);
-	carLane1[1].SetCarData(0,0,16,0);	
-	carLane1[2].SetCarData(0,0,19,0);
-	carLane1[3].SetCarData(0,0,22,2);
-	carLane1[4].SetCarData(0,0,49,0);	
-	carLane1[5].SetCarData(0,0,50,0);
-	carLane1[6].SetCarData(0,0,52,1);
-	carLane1[7].SetCarData(0,0,60,4);
-	carLane1[8].SetCarData(0,0,70,5);
+	carLane1[0].SetCarData(0,0,1,4);
+	carLane1[1].SetCarData(0,0,10,5);	
+	carLane1[2].SetCarData(0,0,12,0);
+	carLane1[3].SetCarData(0,0,15,5);
+	carLane1[4].SetCarData(0,0,16,1);	
+	carLane1[5].SetCarData(0,0,24,0);
+//	carLane1[6].SetCarData(0,0,52,1);
+//	carLane1[7].SetCarData(0,0,60,4);
+//	carLane1[8].SetCarData(0,0,70,5);
 	
 	carLane2[0].SetCarData(0,0,3,2);
 	carLane2[1].SetCarData(0,0,20,1);	
 	carLane2[2].SetCarData(0,0,26,4);
-	carLane2[3].SetCarData(0,0,28,0);
-	carLane2[4].SetCarData(0,0,49,4);	
-	carLane2[5].SetCarData(0,0,53,3);
-	carLane2[6].SetCarData(0,0,58,0);
-	carLane2[7].SetCarData(0,0,59,0);
-	carLane2[8].SetCarData(0,0,62,1);
+//	carLane2[3].SetCarData(0,0,28,0);
+//	carLane2[4].SetCarData(0,0,49,4);	
+//	carLane2[5].SetCarData(0,0,53,3);
+//	carLane2[6].SetCarData(0,0,58,0);
+//	carLane2[7].SetCarData(0,0,59,0);
+//	carLane2[8].SetCarData(0,0,62,1);
 	
-//	cout <<"*****Distance trial  "<< Distance(carLane2,0,17,TotCarsUp,0,TotSites,true) << endl; 		
+
+	TCanvas *c1 = new TCanvas("c1","Graph Draw Options",200,10,800,800);	
+	TMultiGraph *mg = new TMultiGraph();
+	TGraph *step[2];
+for (int m=0; m<=1; m++)
+{
+for (int i =0; i<TotSites; i++)
+	CarDensity[i] = 0 ;
+pPass = float(m);	
+for (int k=0; k<N; k++)
+{
+    x2=x=v=d=ch1=ch2=ch3=ch4=id=temp1=temp2=id1=id2=0;
 
 	for (int i = 1; i <= Tmax; i++)
     {
@@ -245,11 +259,11 @@ int Traffic5()
 				ch4 = carLane1[id].CarData[i-1].Position;
     	        if ( x + v <= ch4 + ch3 +1)
     	            ch3 = 1;
-		else
-    	            ch3 = 0;
+    	        else
+    	        	ch3 = 0;
     	        
     	        ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-		if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
+			if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
 	        	v = d - 1;
 	        else 
 	        	{cout << "\nOvertaking at  " << i << endl;
@@ -308,7 +322,7 @@ int Traffic5()
         }//LOOP FOR CARS
 	}//LOOP FOR TIME
 
-
+/*
 int flag =0;	
 //Display	
 	for (int i=0; i<= Tmax; i++)
@@ -359,7 +373,60 @@ int flag =0;
 		}
 		cout << "| <--- At Time t = " << i << "\n\n\n\n";
 	}//For all time values
-	
+*/
+
+	for (int j=1; j<=TotSites; j++)
+	{	
+		temp[j-1]=0;
+		for (int i=0; i<= Tmax; i++)
+		{
+			for (int k=0; k<TotCarsUp; k++)
+			{
+				if (carLane1[k].CarData[i].Position == j)
+				{
+					temp[j-1]++;
+					break;
+				}				
+			}//for comparing every car's position
+		}
+		temp[j-1]/=float(Tmax);
+		CarDensity[j-1]+=temp[j-1];
+	}
+
+}
+
+
+for (int i=0; i<TotSites; i++)
+	{
+		CarDensity[i]/=float(N);
+		cout<< "\t\tDensity at site "<<i+1<<" = "<<CarDensity[i]<<"\n";
+	}
+
+
+	//Plotting
+	//    c1->SetGrid();
+	step[m] = new TGraph();
+	for (int j=0; j<TotSites; j++)  
+        step[m]->SetPoint(j,j,CarDensity[j]); 
+
+	mg->Add(step[m]);
+    step[m]->SetMarkerStyle(3);
+    step[m]->SetLineColor(m+1);
+    step[m]->GetYaxis()->SetRangeUser(0,1);
+    step[m]->SetLineWidth(5);
+//    step[m]->Draw("same AC");
+//	legend[m]->Draw("same");
+}
+auto* legend = new TLegend(0.1,0.7,0.48,0.9);
+legend->AddEntry(step[0], " Without overtake", "l");
+legend->AddEntry(step[1], " With overtake allowed with probability 1", "l");
+mg->Draw("same AC");
+legend->Draw("same");
+mg->SetTitle(";Position->;Density->");
+
+
+
+/*	
 //Plotting
 	TCanvas *c1 = new TCanvas("c1","Graph Draw Options",200,10,800,800);
 //    c1->SetGrid();
@@ -411,8 +478,9 @@ int flag =0;
 	mg2->Draw("A pm p");
 	ShiftXAxis(mg2,TotSites);
 	ReverseYAxis(mg2);	
-	
+*/
  return 0;	
 }
+
 
 

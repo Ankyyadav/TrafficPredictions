@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Sun Mar 15 01:11:09 2020
+
+@author: Shraddha Jain
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Mar 14 20:59:59 2019
 
 @author: Shraddha Jain
@@ -26,29 +33,48 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import randrange
 from random import sample
-num_cars = 9 ##number of cars initially
-L = 525
+num_cars = 10 ##number of cars initially
+L = 500
 num_cells = (int)(L/7.5)
 tot_time = 50
 Vmax = 5
-prob = 0.3
-c=0
+pr = 0.1
+p_0 = 0.8
+
 pos_time = np.zeros([tot_time,num_cells])
 vel_pos_time = np.zeros([tot_time,num_cells])
 num = np.linspace(0,num_cells-1,num_cells,dtype=int)
 num = num.tolist() ##linspace creates an array. tolist() converts that array into a list
-alpha = 0.5 ##car adding probability
+alpha = 0.3 ##car adding probability
 beta = 0.8 ##car removing probbaility
 flag = 0
+
 for i in range(num_cars):
     rdm = sample(num,1)
     num.remove(rdm[0])
     pos_time[0,rdm[0]] = rdm[0]+1
 
+"""
+pos_time[0,2] = 3
+pos_time[0,4] = 5
+pos_time[0,6] = 7
+pos_time[0,7] = 8
+pos_time[0,50] = 51
+pos_time[0,21] = 22
+pos_time[0,30] = 31
+pos_time[0,28] = 29
+pos_time[0,60] = 61
+pos_time[0,64] = 65
+#print(pos_time)
+"""
 vel = []
+
 for i in range(num_cars): ##assigning initial velocities
     R = randrange(0,Vmax+1,1)
     vel.append(R)
+#print(vel)
+#print(pos_time)
+#vel = [3,4,1,0,2,4,5,2,3,1]
     
 #print("initial positions")
 #print(pos_time)
@@ -116,6 +142,11 @@ for t in range(tot_time-1):
                 if(p2!=0):
                     d = abs(p2-p1)
                     
+                if(vel[i]==0): ##implementing VDR
+                    prob=p_0
+                if(vel[i]>0):
+                    prob=pr
+                #print(prob)    
                 if(vel[i]<Vmax): ## first condition
                     vel[i] = vel[i]+1
 

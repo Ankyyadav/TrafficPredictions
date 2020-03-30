@@ -19,21 +19,14 @@
 // * Extension Type --  NaSch Model in a circle                           *
 // *                --  TimeStamp made a structure                        *
 // *                --  Plotting added                                    *
-// *                --  Two lanes created for two sided traffic           *
-// *                --  Different number of cars                          *
-// *                --  Overtaking of cars using other lane allowed       *
+// *                --  Density plots for traffic signal on single lane   *
 // ************************************************************************
 //
-
-
 
 #include<iostream>
 #include<cmath>
 #include<cstdlib>
 #include<ctime>
-#include<vector>
-#include<bits/stdc++.h>
-#include<algorithm> 
 
 using namespace std;
 
@@ -90,6 +83,8 @@ struct TimeStamp
 	int Time;
 	int Position;
 	int Velocity;
+	
+
 };
 
 //Class to keep track of all cars
@@ -103,9 +98,13 @@ class Vehical: public TimeStamp
     TimeStamp CarData[100];
 //Constructors
     Vehical()
-    {VehicalID = 0;} 
+    {
+    	VehicalID = 0;
+    } 
     Vehical(int id)
-    {VehicalID = id;}
+    {
+    	VehicalID = id;
+    }
 //Setter Functions    
     void SetCarData(int i, int t,int x, int v)
     {
@@ -114,20 +113,27 @@ class Vehical: public TimeStamp
     	CarData[i].Velocity = v;
     }   
     void SetVehicalID(int id)
-    {VehicalID = id;}   
+    {
+    	VehicalID = id;
+    }   
     
 //Getter functions    
     int GetVehicalID()
-    {return VehicalID;}   
-    
+    {
+    	return VehicalID;
+    }   
     int GetCarTime(int i)
-    {return CarData[i].Time;}   
-    
+    {
+    	return CarData[i].Time;
+    }   
     int GetCarPosition(int i)
-    {return CarData[i].Position;}
-    
+    {
+    	return CarData[i].Position;
+    }
     int GetCarVelocity(int i)
-    {return CarData[i].Velocity;}
+    {
+    	return CarData[i].Velocity;
+    }
     
 // Print Function
 	void PrintCarInfo(int i)
@@ -138,7 +144,7 @@ class Vehical: public TimeStamp
 };
 
 //Probability Function
-bool Prob(float f)
+bool Probability(float f)
 {
 	if (rand()%100 < f*100)
 		return true;
@@ -185,234 +191,218 @@ int Distance(Vehical NewCar[], int t, int x, int Tot, int pos, int Dmax, bool re
 }
 
 
-int Traffic5()
+const int TotSites = 20;
+int Traffic9()
 {
 	
 	srand(time(NULL));
 	cout<<"This should work!!!\n\n\n";
-	int TotCarsUp = 9;
-	int TotCarsDown = 9;
-	int TotSites = 70;
-	int Tmax = 40;
+	int TotCars = 9;
+
+	int Tmax = 100;
 	int Vmax = 5;
-	float pBrake = 0.5;
-	float pPass = 1;
+	float p = 1.0/64.0;
+	float pv = 0;
+	float p0 = 0.75;
+	p0=p=0.75;
+	int TimePerTSignal = 10;
+	int TSignalLength = 5;
+	bool TSignal = false;
+	int TSignalPos = 40;
+	float CarDensity[TotSites] = {0} ;
+	float temp[TotSites];
+	int N = 1000;
 	
-	int x2=0,x=0,v=0,d=0,ch1=0,ch2=0,ch3=0,ch4=0,id=0;
-	Vehical carLane1[TotCarsUp];
-	Vehical carLane2[TotCarsDown];
+	int x=0,v=0,d=0,temp1=0,id1=0,id2=0,id=0;
+	Vehical car[TotCars];
 //Initialisation Part
 	
-	carLane1[0].SetCarData(0,0,14,4);
-	carLane1[1].SetCarData(0,0,16,0);	
-	carLane1[2].SetCarData(0,0,19,0);
-	carLane1[3].SetCarData(0,0,22,2);
-	carLane1[4].SetCarData(0,0,49,0);	
-	carLane1[5].SetCarData(0,0,50,0);
-	carLane1[6].SetCarData(0,0,52,1);
-	carLane1[7].SetCarData(0,0,60,4);
-	carLane1[8].SetCarData(0,0,70,5);
 	
-	carLane2[0].SetCarData(0,0,3,2);
-	carLane2[1].SetCarData(0,0,20,1);	
-	carLane2[2].SetCarData(0,0,26,4);
-	carLane2[3].SetCarData(0,0,28,0);
-	carLane2[4].SetCarData(0,0,49,4);	
-	carLane2[5].SetCarData(0,0,53,3);
-	carLane2[6].SetCarData(0,0,58,0);
-	carLane2[7].SetCarData(0,0,59,0);
-	carLane2[8].SetCarData(0,0,62,1);
+	cout << "\nCar Density ->  " << float(TotCars)/float(TotSites);
+	cout << "\nMaximum Velocity ->  "<< Vmax << "\nTotal time steps ->  " << Tmax << endl;
+	cout << "Probability of random braking ->  " << p <<endl;
+	car[0].SetCarData(0,0,1,0);
+	car[1].SetCarData(0,0,2,0);	
+	car[2].SetCarData(0,0,3,0);
+	car[3].SetCarData(0,0,4,0);
+	car[4].SetCarData(0,0,5,0);	
+	car[5].SetCarData(0,0,6,0);
+	car[6].SetCarData(0,0,7,0);
+	car[7].SetCarData(0,0,8,0);
+	car[8].SetCarData(0,0,9,0);
 	
-//	cout <<"*****Distance trial  "<< Distance(carLane2,0,17,TotCarsUp,0,TotSites,true) << endl; 		
-
+//	car[0].SetCarData(0,0,3,5);
+//	car[1].SetCarData(0,0,8,4);	
+//	car[2].SetCarData(0,0,14,0);
+//	car[3].SetCarData(0,0,15,0);
+//	car[4].SetCarData(0,0,18,3);
+			
+for (int k=0; k<N; k++)
+{
+    x=v=d=id=temp1=id1=id2=0;
 	for (int i = 1; i <= Tmax; i++)
-    {
-        for (int j = 0; j < TotCarsUp; j++ )
+	{
+		if (i % TimePerTSignal >=0 && i % TimePerTSignal < TSignalLength )
         {
-		    x = carLane1[j].CarData[i-1].Position;
-	        v = carLane1[j].CarData[i-1].Velocity;
-			
-			d = Distance(carLane1,i-1,x,TotCarsUp,1,TotSites,false,id);
-//STEP 1	
-    	    if (v < Vmax && d > v + 1 )
-   		    	v = v + 1; 
-//STEP 2  
-// + OVERTAKING	
-    	    if (d <= v && v > 0 )   	 
-    	    {
-    	        ch1 = Distance(carLane1,i-1,x+v,TotCarsUp,0,TotSites,true,id);
-    	        ch3 = carLane1[id].CarData[i-1].Velocity;
-				ch4 = carLane1[id].CarData[i-1].Position;
-    	        if ( x + v <= ch4 + ch3 +1)
-    	            ch3 = 1;
-		else
-    	            ch3 = 0;
-    	        
-    	        ch2 = Distance(carLane2,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-		if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
-	        	v = d - 1;
-	        else 
-	        	{cout << "\nOvertaking at  " << i << endl;
-	        	ch2 = -1;}
-	        }
-//STEP 3
-	        if (Prob(pBrake) == true && v > 0 && ch2 != -1)
-	        	v = v - 1;
-//STEP 4
-	        if (x+v <= TotSites)
-	        	x = x+v;
-	        else
-	        	x = v - (TotSites - x);
-				
-	        carLane1[j].SetCarData(i,i,x,v);						
+            TSignal = true;
+            temp1 = Distance(car,i-1,TSignalPos,TotCars,0,TotSites,true,id1);
         }
-        
-        
-        
-        for (int j = 0; j < TotCarsDown; j++ )
-        {
-		x = carLane2[j].CarData[i-1].Position;
-	        v = carLane2[j].CarData[i-1].Velocity;
+	
+	
+		for (int j = 0; j < TotCars; j++ )
+		{
+			x = car[j].CarData[i-1].Position;
+			v = car[j].CarData[i-1].Velocity;
 			
-		d = Distance(carLane2,i-1,x,TotCarsDown,1,TotSites,false,id);
-//STEP 1	
-    	    if (v < Vmax && d > v + 1 )
-   		    	v = v + 1; 
+			if (TSignal == true && id1 == j && temp1 >0 && temp1 <= v)
+                v = temp1;
+            else if (TSignal == true && id1 == j && temp1 ==0 && temp1 <= v)
+                v = 0;
+            else
+            {
+            	d = Distance(car,i-1,x,TotCars,1,TotSites,false,id);
+
+//STEP 0
+				if (v == 0)
+					pv = p0;
+				else
+					pv = p;
+
+//STEP 1		
+				if (v < Vmax && d > v + 1 )
+						v = v + 1; 
 //STEP 2		
-// + OVERTAKING	
-    	    if (d <= v && v > 0 )   	 
-    	    {
-    	        ch1 = Distance(carLane2,i-1,x+v,TotCarsDown,0,TotSites,true,id);
-    	        ch3 = carLane2[id].CarData[i-1].Velocity;
-				ch4 = carLane2[id].CarData[i-1].Position;
-    	        if ( x + v <= ch4 + ch3 +1)
-    	            ch3 = 1;
-    	        
-    	        ch2 = Distance(carLane1,i-1,TotSites+1-x,TotCarsDown,0,TotSites,true,id);
-    	        if (ch3==1 || ch2 <= 2*Vmax || ch1==0 || Prob(pPass)==false)     
-	        	    v = d - 1;
-	        	else 
-	        	    {cout << "\nOvertaking at  " << i << endl;
-	        	     ch2 = -1;}
-	        }
+				if (d <= v && v > 0 )
+					v = d - 1;
 //STEP 3
-	        if (Prob(pBrake) == true && v > 0)
-	        	v = v - 1;
+				if (Probability(p) == true && v > 0)
+					v = v - 1;
 //STEP 4
-	        if (x+v <= TotSites)
-	        	x = x+v;
-	        else
-	        	x = v - (TotSites - x);
+			}
+				if (x+v <= TotSites)
+					x = x+v;
+				else
+					x = v - (TotSites - x);
+			
 				
-	        carLane2[j].SetCarData(i,i,x,v);						
-        }//LOOP FOR CARS
+			car[j].SetCarData(i,i,x,v);						
+
+			
+		}//LOOP FOR CARS
+		TSignal = false;
 	}//LOOP FOR TIME
-
-
+	
 int flag =0;	
+
+
+
+/*	
 //Display	
 	for (int i=0; i<= Tmax; i++)
 	{
-		
-//For Lane 1
-        cout << " --->|";		
+		if (i % TimePerTSignal >=0 && i % TimePerTSignal < TSignalLength  && i>0)
+		    TSignal = true;
 		for (int j=1; j<=TotSites; j++)
 		{	
+		
+			if (j == TSignalPos + 1 && TSignal == true)
+		        cout << " R ";
+		    else if(j == TSignalPos + 1 && TSignal == false)
+		        cout << " G ";
 			flag=0;
-			for (int k=0; k<TotCarsUp; k++)
+			for (int k=0; k<TotCars; k++)
 			{
-				if (carLane1[k].CarData[i].Position == j)
+				if (car[k].CarData[i].Position == j)
 				{
 					flag=1;
-					cout << carLane1[k].CarData[i].Velocity << "";
+					cout << car[k].CarData[i].Velocity << "";
 					break;
-				}				
+				}
 			}//for comparing every car's position
 			
 			if (flag == 0)
 				cout << "." ;
 			
 		}// for every site
-		cout << "| --->\n     ";
-		for (int m = 0; m<TotSites+2; m++)
-		    cout << "_";
-		cout << "\n\n";
-		
-//For Lane 2	
-		cout << " <---|";		
-		for (int j=TotSites; j>=1; j--)
-		{	
-			flag=0;
-			for (int k=0; k<TotCarsDown; k++)
+		TSignal = false;
+		cout << "\n";
+	}//For all time values
+*/	
+	
+	
+	for (int j=1; j<=TotSites; j++)
+	{	
+		temp[j-1]=0;
+		for (int i=0; i<= Tmax; i++)
+		{
+			for (int k=0; k<TotCars; k++)
 			{
-				if (carLane2[k].CarData[i].Position == j)
+				if (car[k].CarData[i].Position == j)
 				{
-					flag=1;
-					cout << "" << carLane2[k].CarData[i].Velocity ;
+					temp[j-1]++;
 					break;
 				}				
 			}//for comparing every car's position
-			
-			if (flag == 0)
-				cout << "." ;
-			
 		}
-		cout << "| <--- At Time t = " << i << "\n\n\n\n";
-	}//For all time values
+		temp[j-1]/=float(Tmax);
+		CarDensity[j-1]+=temp[j-1];
+	}
+}	
+	for (int i=0; i<TotSites; i++)
+	{
+		CarDensity[i]/=float(N);
+		cout<< "\t\tDensity at site "<<i+1<<" = "<<CarDensity[i]<<"\n";
+	}
 	
+	//Plotting
+	TCanvas *c1 = new TCanvas("c1","Graph Draw Options",200,10,800,800);
+	//    c1->SetGrid();
+    TGraph *step;
+	step = new TGraph();
+	for (int j=0; j<TotSites; j++)  
+        step->SetPoint(j,j,CarDensity[j]); 
+
+	auto* legend = new TLegend(0.1,0.7,0.48,0.9);
+	legend->AddEntry(step, " p (brake) = 0.3", "s");
+	legend->AddEntry(step, " Traffic Signal between 10^{th} and 11^{th} cell", "-");
+	legend->AddEntry(step, " turns on every 15 sec for 5 sec", "-");
+	legend->AddEntry(step, " Total number of cars fixed (4)", "-");	
+    step->SetMarkerStyle(3);
+//    step->SetLineColor(4);
+    step->SetTitle(";Position->;Density->");
+    step->GetYaxis()->SetRangeUser(0,1);
+    step->SetLineWidth(5);
+    step->Draw("same AC");
+	legend->Draw("same");
+		
+/*	
 //Plotting
 	TCanvas *c1 = new TCanvas("c1","Graph Draw Options",200,10,800,800);
 //    c1->SetGrid();
-    c1->Divide(1,2);
-    TGraph *step1[TotCarsUp];
-    TGraph *step2[TotCarsDown];
-    TMultiGraph *mg1 = new TMultiGraph();
-    TMultiGraph *mg2 = new TMultiGraph();
-	for (int i=0; i<TotCarsUp; i++)
+    TGraph *step[TotCars];
+    TMultiGraph *mg = new TMultiGraph();
+	for (int i=0; i<TotCars; i++)
 	{
-	    step1[i] = new TGraph();
+	    step[i] = new TGraph();
 	    for (int j=0; j<=Tmax; j++)
         {   
-            step1[i]->SetPoint(j,carLane1[i].CarData[j].Position,Tmax-carLane1[i].CarData[j].Time);
-            step1[i]->SetMarkerStyle(i*2+1);
-            c1->Update();
-        } 
-        mg1->Add(step1[i]);
-        step1[i]->SetMarkerStyle(20+i);
-        step1[i]->SetMarkerColor(1);  
-        step1[i]->SetMarkerSize(1);      
-	}
-	
-	
-	for (int i=0; i<TotCarsDown; i++)
-	{
-	    step2[i] = new TGraph();   
-	    for (int j=0; j<=Tmax; j++)
-        {   
-            step2[i]->SetPoint(j,TotSites-carLane2[i].CarData[j].Position+1,Tmax-carLane2[i].CarData[j].Time);
-            step2[i]->SetMarkerStyle(i*2+1);            
+            step[i]->SetPoint(j,car[i].CarData[j].Position,Tmax-car[i].CarData[j].Time);
+            //step[i]->Draw("same A*");
+            step[i]->SetMarkerStyle(i*2+1);
             c1->Update();
 
-        }        
-        mg2->Add(step2[i]);    
-        step2[i]->SetMarkerStyle(20+i);
-        step2[i]->SetMarkerColor(1);
-        step2[i]->SetMarkerSize(1);                      
+        } 
+        mg->Add(step[i]); 
+        step[i]->SetMarkerStyle(20+i);
+        step[i]->SetMarkerColor(1);        
 	}
+	mg->Draw("A pm p");
+	ShiftXAxis(mg,TotSites);
+	ReverseYAxis(mg);
 	
-	c1->cd(1);
-	mg1->SetTitle("For cars going left to right --->");
-	mg1->Draw("A pm p");
-	ShiftXAxis(mg1,TotSites);
-	ReverseYAxis(mg1);
-	
-	c1->cd(2);
-	mg2->SetTitle("For cars going to left to right <---");
-	mg2->Draw("A pm p");
-	ShiftXAxis(mg2,TotSites);
-	ReverseYAxis(mg2);	
-	
- return 0;	
+*/
+	return 0;
 }
+
 
 
